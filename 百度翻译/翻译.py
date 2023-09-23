@@ -1,0 +1,38 @@
+import requests
+import execjs
+import json
+import random
+import time
+
+e = input('enter the english world:')
+# time.time() 时间戳，python的时间戳*1000是js的时间戳 int是取整数  使用str转成字符串 才能进行拼接
+# random.random() 随机生成的为0.几
+# r = str(int(time.time() * 1000))  # js时间戳
+# i = r + str(int(random.random() * 10))
+
+node = execjs.get()
+with open('./123.js', 'r', encoding='utf-8') as f:
+    jscode = f.read()
+
+# s是要执行的函数 data是加密的数据 ctx = execjs.compile(jscode).call('s', data)
+sign = execjs.compile(jscode).call('sexports', e)
+# print(sign)
+url = 'https://fanyi.baidu.com/v2transapi?from=en&to=zh'
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 '
+                  'Safari/537.36 ',
+    # 'Referer': 'https://fanyi.baidu.com/?aldtype=16047',
+    'Cookie': 'REALTIME_TRANS_SWITCH=1; HISTORY_SWITCH=1; FANYI_WORD_SWITCH=1; SOUND_PREFER_SWITCH=1; SOUND_SPD_SWITCH=1; APPGUIDE_10_0_2=1; PSTM=1658464688; BIDUPSID=61C3471D78389B62142B97E33BB03A7D; BDORZ=FFFB88E999055A3F8A630C64834BD6D0; BDUSS=Foekx4RHdPVmlUdDQ2WXozM21jTTFYSGZuTThuY2xJUXFKTDF1MGFDOXBwZzFqSVFBQUFBJCQAAAAAAAAAAAEAAAA0im5z06PC5OnkuttvTwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGkZ5mJpGeZiMD; BDUSS_BFESS=Foekx4RHdPVmlUdDQ2WXozM21jTTFYSGZuTThuY2xJUXFKTDF1MGFDOXBwZzFqSVFBQUFBJCQAAAAAAAAAAAEAAAA0im5z06PC5OnkuttvTwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGkZ5mJpGeZiMD; BAIDUID=6B35BE0DFD0EE54A29ECECA64655D530:SL=0:NR=10:FG=1; H_PS_PSSID=26350; Hm_lvt_64ecd82404c51e03dc91cb9e8c025574=1659248009,1659250024,1659441628,1659521011; BDRCVFR[Ter2S3H5o_D]=mk3SLVN4HKm; delPer=0; PSINO=2; BA_HECTOR=212kak240lah2g05802iuhpa1hekj4717; ZFY=fImnsEk5SLfK:AQNgdyX5E9Jyo1dWK0CfELGvmNIpS:AQ:C; BAIDUID_BFESS=79898F7E1A3F88AB0823094EC84EB62E:FG=1; BCLID=10327166161299421569; BDSFRCVID=dw8OJeC627A4RubDgRwSUPwKEmRhDKjTH6aokg_lfMNfZmRG_YFyEG0Phx8g0Ku-DcdzogKKBeOTHg8F_2uxOjjg8UtVJeC6EG0Ptf8g0f5; H_BDCLCKID_SF=JRAjoK-XJDvDqTrP-trf5DCShUFsL4jCB2Q-XPoO3Kt-oCLRQ-tM0UAA0hJi04riW5FeafbgylRp8P3y0bb2DUA1y4vpKbvjKmTxoUJ2XMcZ8Jjcqq7ohb8ebPRi3tQ9QgbMVpQ7tt5W8ncFbT7l5hKpbt-q0x-jLTnhVn0MBCK0MD8xDT8Bj6PVKgTa54cbb4o2WbCQJRnr8pcN2b5oQTOBWGDe0P-JBKnPbP3c3R6vOPLRylOUWfAkXpJvQnJjt2JxaqRC5-n2Hq5jDh3MBpI4XfQWelvyaTRy0hvc0J5cShnTeMjrDRLbXU6BK5vPbNcZ0l8K3l02V-bIe-t2XjQhDN0ftTK8tJ3KBtF85JvbKROvhjRf5TkgyxomtjDf0RnNLRog5MobVU5M5URphqDJQ-RBLUkqKCOW0M7s5q6Fexcz0xJrWfK-QttjQPvOfIkja-KE3nOfJR7TyURIbf47yMtO0q4Hb6b9BJcjfU5MSlcNLTjpQT8r5MDOK5OhJRQ2QJ8BJII5bMK; BCLID_BFESS=10327166161299421569; BDSFRCVID_BFESS=dw8OJeC627A4RubDgRwSUPwKEmRhDKjTH6aokg_lfMNfZmRG_YFyEG0Phx8g0Ku-DcdzogKKBeOTHg8F_2uxOjjg8UtVJeC6EG0Ptf8g0f5; H_BDCLCKID_SF_BFESS=JRAjoK-XJDvDqTrP-trf5DCShUFsL4jCB2Q-XPoO3Kt-oCLRQ-tM0UAA0hJi04riW5FeafbgylRp8P3y0bb2DUA1y4vpKbvjKmTxoUJ2XMcZ8Jjcqq7ohb8ebPRi3tQ9QgbMVpQ7tt5W8ncFbT7l5hKpbt-q0x-jLTnhVn0MBCK0MD8xDT8Bj6PVKgTa54cbb4o2WbCQJRnr8pcN2b5oQTOBWGDe0P-JBKnPbP3c3R6vOPLRylOUWfAkXpJvQnJjt2JxaqRC5-n2Hq5jDh3MBpI4XfQWelvyaTRy0hvc0J5cShnTeMjrDRLbXU6BK5vPbNcZ0l8K3l02V-bIe-t2XjQhDN0ftTK8tJ3KBtF85JvbKROvhjRf5TkgyxomtjDf0RnNLRog5MobVU5M5URphqDJQ-RBLUkqKCOW0M7s5q6Fexcz0xJrWfK-QttjQPvOfIkja-KE3nOfJR7TyURIbf47yMtO0q4Hb6b9BJcjfU5MSlcNLTjpQT8r5MDOK5OhJRQ2QJ8BJII5bMK; Hm_lpvt_64ecd82404c51e03dc91cb9e8c025574=1659525828; ab_sr=1.0.1_NDliNTZlODMwOGI2NmVkMDcwZjA1MDI1MDQ0Mzg1ZGFmNjY3MWZmOTMxNWM4MDBlZWIwMjgwZWUwNjc4Mzk3NmYzOWIzMjBlMWM2OTg1ZTk2MzVhZTM5NzJhNDYwNzc0MTMxZDkzOTEzMTVjY2QwODA0NjY1NWQ5ZGZkNjIzNjlmNzg1Yzg5Yzc3OGZkMTNlOGJkNWMxM2YzNTE4NmQ2NDIzMzY5NjZmNTQyODdiMTY4YjNjNmJlYjBhMmNkZTMy',
+}
+data = {
+    'from': 'en',
+    'to': 'zh',
+    'query': e,
+    'simple_means_flag': '3',
+    'sign': sign,
+    'token': '8952ea9d3feb1c896f1ac3cadde5081b',
+    'domain': 'common',
+}
+result = requests.post(url, headers=headers, data=data)
+ret = json.loads(result.content.decode())
+print(ret)
